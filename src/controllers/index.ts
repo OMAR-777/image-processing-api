@@ -1,47 +1,36 @@
 import { Request, Response } from 'express';
-import sharp from 'sharp';
-import path from 'path';
-import fs from 'fs';
-import ExpressError from '../utils/ExpressError';
 
-const imagesFullPath = path.join(process.cwd(), 'public', 'images', 'full');
-const imagesThumbPath = path.join(process.cwd(), 'public', 'images', 'thumb');
+import ExpressError from '../utils/ExpressError';
+import * as ImgProc from '../utils/imageProcessing';
 
 export const getImage = async (req: Request, res: Response) => {
-  const { filename, width, height } = req.query;
-  const imagePath = path.join(imagesFullPath, <string>filename + '.jpg');
+  const filename = <string>req.query.filename;
+  const width = parseInt(<string>req.query.width);
+  const height = parseInt(<string>req.query.height);
 
-  if (!fs.existsSync(imagePath)) {
-    throw new ExpressError('Error: file not found', 400);
+  if (!ImgProc.fullImgExists(filename)) {
+    throw new ExpressError('Image not found', 400);
   }
+
   //loading full image if neither height and width is provided
-  if (height == null && width == null) {
-    console.log('Loaded full image: ' + imagePath);
-    return res.sendFile(imagePath);
+  if (isNaN(height) && isNaN(width)) {
+    console.log('Loaded full image: ' + ImgProc.getFullImgPath(filename));
+    return res.sendFile(ImgProc.getFullImgPath(filename));
   }
-  // a processed path string for the image
-  const processedPath = path.join(
-    imagesThumbPath,
-    `${filename}_${width}_${height}.jpg`
-  );
 
+  const processedPath = ImgProc.getCachedImgPath(filename, width, height);
   //loading processed image if it exists
-  if (fs.existsSync(processedPath)) {
-    console.log('Loaded processed image: ' + imagePath);
+  if (ImgProc.cachedImgExistsByPath(processedPath)) {
+    console.log('Loaded cached image: ' + processedPath);
     return res.sendFile(processedPath);
   }
   try {
     //process and upload image
-    await sharp(imagePath)
-      .resize({
-        width: parseInt(<string>width),
-        height: parseInt(<string>height),
-      })
-      .toFile(processedPath);
+    await ImgProc.resizeAndCatchImage(filename, width, height);
 
-    console.log('Processed and uploaded image: ' + processedPath);
+    console.log('Processed and cached image: ' + processedPath);
     return res.sendFile(processedPath);
   } catch (e) {
-    throw new ExpressError('Error: could not process image' + e, 500);
+    throw new ExpressError('Could not process image' + e, 500);
   }
 };
