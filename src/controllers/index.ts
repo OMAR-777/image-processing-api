@@ -12,7 +12,7 @@ export const getImage = async (req: Request, res: Response) => {
     throw new ExpressError('Image not found', 400);
   }
 
-  //loading full image if neither height and width is provided
+  //loading full image if neither height or width is provided
   if (isNaN(height) && isNaN(width)) {
     console.log('Loaded full image: ' + ImgProc.getFullImgPath(filename));
     return res.sendFile(ImgProc.getFullImgPath(filename));
@@ -26,7 +26,8 @@ export const getImage = async (req: Request, res: Response) => {
   }
   try {
     //process and upload image
-    await ImgProc.resizeAndCatchImage(filename, width, height);
+    const processedImage = ImgProc.resizeImage(filename, width, height);
+    await ImgProc.cacheImage(processedImage, processedPath);
 
     console.log('Processed and cached image: ' + processedPath);
     return res.sendFile(processedPath);
