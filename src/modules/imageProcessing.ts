@@ -12,10 +12,12 @@ export const getFullImgPath = (filename: string): string => {
 
 export const getCachedImgPath = (
   filename: string,
-  width: number,
-  height: number
+  width?: number,
+  height?: number
 ): string => {
-  return path.join(ImgsThumbPath, `${filename}_${width}_${height}.jpg`);
+  if (width && height)
+    return path.join(ImgsThumbPath, `${filename}_${width}_${height}.jpg`);
+  return path.join(ImgsThumbPath, `${filename}.jpg`);
 };
 
 export const fullImgExists = (filename: string): boolean => {
@@ -34,14 +36,14 @@ export const fullImgExistsByPath = (path: string): boolean => {
 
 export const cachedImgExists = (
   filename: string,
-  width: number,
-  height: number
+  width?: number,
+  height?: number
 ): boolean => {
-  if (fs.existsSync(getCachedImgPath(filename, width, height))) {
-    return true;
-  }
-  return false;
+  if (width && height)
+    return fs.existsSync(getCachedImgPath(filename, width, height));
+  return fs.existsSync(getCachedImgPath(filename));
 };
+
 export const cachedImgExistsByPath = (path: string): boolean => {
   if (fs.existsSync(path)) {
     return true;

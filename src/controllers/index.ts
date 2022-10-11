@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import ExpressError from '../utils/ExpressError';
-import * as ImgProc from '../utils/imageProcessing';
+import * as ImgProc from '../modules/imageProcessing';
 
 export const getImage = async (req: Request, res: Response) => {
   const filename = <string>req.query.filename;
