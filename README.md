@@ -47,7 +47,7 @@ To run tests, run the following command
 ```
 
 
-## API Usage/Examples
+## API refrences
 
 ### Get a full image
 
@@ -99,7 +99,7 @@ To run tests, run the following command
 
 ### Get a processed image with height and width set
 Subsequent requests on the same endpoint as the previous one with the width and height set  
-will load the cached version of the image, it will not reprocess the full image again
+will load the cached version of the image, it will not reprocess the full image again.
 #### Request  
 `GET /?filename=fjord&width=500&height=500`
 
