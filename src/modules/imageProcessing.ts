@@ -1,7 +1,7 @@
 import sharp, { OutputInfo, Sharp } from 'sharp';
 import path from 'path';
 import fs from 'fs';
-// import ExpressError from '../utils/ExpressError';
+
 const cacheFolderName = 'thumb';
 const ImgsFullPath = path.join(process.cwd(), 'public', 'imgs', 'full');
 const ImgsCachePath = path.join(
@@ -73,19 +73,6 @@ export const cacheImage = async (
 ): Promise<OutputInfo> => {
   ensureCacheDirCreated();
   return await sharp.toFile(processedPath);
-};
-
-export const resizeAndCatchImage = async (
-  filename: string,
-  width: number,
-  height: number
-): Promise<OutputInfo> => {
-  return await sharp(getFullImgPath(filename))
-    .resize({
-      width: width,
-      height: height,
-    })
-    .toFile(getCachedImgPath(filename, width, height));
 };
 
 const ensureCacheDirCreated = (): void => {

@@ -8,6 +8,7 @@ export const getImage = async (req: Request, res: Response) => {
   const width = parseInt(<string>req.query.width);
   const height = parseInt(<string>req.query.height);
 
+  //check if the full image does not exist
   if (!ImgProc.fullImgExists(filename)) {
     throw new ExpressError('Image not found', 400);
   }
@@ -32,6 +33,6 @@ export const getImage = async (req: Request, res: Response) => {
     console.log('Processed and cached image: ' + processedPath);
     return res.sendFile(processedPath);
   } catch (e) {
-    throw new ExpressError('Could not process image' + e, 500);
+    throw new ExpressError('Could not process the image', 500);
   }
 };

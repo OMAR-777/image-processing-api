@@ -1,7 +1,7 @@
 import app from '../app';
 import supertest from 'supertest';
 
-describe('testing image endpoint query validation:', () => {
+describe('Testing image processing endpoint query validation:', () => {
   const filename = 'fjord';
   const notExistFileName = 'fjordddd';
 

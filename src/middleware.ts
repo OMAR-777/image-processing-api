@@ -6,7 +6,7 @@ export const validateImageQuery = (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): void => {
   const { error } = imageQuerySchema.validate(req.query);
   if (error) {
     const msg = error.details.map(el => el.message).join(',');
