@@ -47,7 +47,7 @@ To run tests, run the following command
 ```
 
 
-## API refrences
+## API endpoints
 
 ### Get a full image
 
